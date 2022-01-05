@@ -1,0 +1,32 @@
+name: Deploy my Lambda function
+
+on:
+   push:
+      branches:
+        - main
+
+jobs:
+  build:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Set up python
+      with: 
+        python-version:3.8
+
+    - name: Install Libraries
+      run: |
+          cd function
+          python -m pip instakk --upgrade pip
+          if [-f requirements.txt]; then pip install -r requirements.txt -t .; fi
+    - name: 
+      run: |
+          cd function
+          zip -r ../${{ github.sha}}.zip . 
+    - name: Archive the artifact
+      uses: actions/upload-artifact@v2
+      with: 
+        name: zipped-bundle
+        path: ${{ github.sha }}.zip
